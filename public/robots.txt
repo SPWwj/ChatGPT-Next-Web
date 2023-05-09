@@ -1,4 +1,4 @@
 User-agent: *
-Disallow: /
+Allow: /
 User-agent: vitals.vercel-insights.com
 Allow: /
