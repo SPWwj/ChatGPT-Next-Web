@@ -19,6 +19,7 @@ export type Message = ChatCompletionResponseMessage & {
   date: string;
   streaming?: boolean;
   isError?: boolean;
+  image?: string;
   id?: number;
   model?: ModelType;
 };
@@ -262,6 +263,11 @@ export const useChatStore = create<ChatStore>()(
           session.messages.push(userMessage);
           session.messages.push(botMessage);
         });
+        // botMessage.streaming = false;
+        // botMessage.content = "hello world"
+        // get().onNewMessage(botMessage);
+
+        // return;
 
         // make request
         console.log("[User Input] ", sendMessages);

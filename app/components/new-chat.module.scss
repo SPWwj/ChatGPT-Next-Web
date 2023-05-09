@@ -68,7 +68,7 @@
   .masks {
     flex-grow: 1;
     width: 100%;
-    overflow: hidden;
+    overflow: auto;
     align-items: center;
     padding-top: 20px;
 
@@ -77,7 +77,8 @@
     .mask-row {
       margin-bottom: 10px;
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
+      width: 100%;
 
       @for $i from 1 to 10 {
         &:nth-child(#{$i * 2}) {

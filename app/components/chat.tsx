@@ -250,10 +250,10 @@ export function PromptHints(props: {
       } else if (e.key === "ArrowDown") {
         changeIndex(-1);
       } else if (e.key === "Enter") {
-        const selectedPrompt = props.prompts.at(selectIndex);
-        if (selectedPrompt) {
-          props.onPromptSelect(selectedPrompt);
-        }
+        // const selectedPrompt = props.prompts.at(selectIndex);
+        // if (selectedPrompt) {
+        //   props.onPromptSelect(selectedPrompt);
+        // }
       }
     };
 
@@ -373,6 +373,7 @@ export function ChatActions(props: {
       </div>
 
       <div
+        title="Show prompt hints"
         className={`${chatStyle["chat-input-action"]} clickable`}
         onClick={props.showPromptHints}
       >
@@ -380,6 +381,7 @@ export function ChatActions(props: {
       </div>
 
       <div
+        title="Set cosplayer"
         className={`${chatStyle["chat-input-action"]} clickable`}
         onClick={() => {
           navigate(Path.Masks);
@@ -773,6 +775,7 @@ export function Chat() {
                     parentRef={scrollRef}
                     defaultShow={i >= messages.length - 10}
                   />
+                  <>Item 2</>
                 </div>
                 {!isUser && !message.preview && (
                   <div className={styles["chat-message-actions"]}>
