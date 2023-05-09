@@ -30,6 +30,14 @@ export function AvatarPicker(props: {
     />
   );
 }
+type LanguageCodeMapping = {
+  [key: string]: string;
+};
+
+const languageCodeMapping: LanguageCodeMapping = {
+  cmn: "zh-CN",
+  // Add other mappings if necessary
+};
 export function Avatar(props: {
   model?: ModelType;
   avatar?: string;
@@ -49,14 +57,31 @@ export function Avatar(props: {
       setIsSpeaking(false);
     } else {
       // Detect language using franc
-      const detectedLanguage = franc(props.text);
+      let detectedLanguage = franc(props.text);
       const availableVoices = synth.getVoices();
+      detectedLanguage =
+        languageCodeMapping[detectedLanguage] || detectedLanguage;
+
+      console.log(detectedLanguage, "detectedLanguage");
+      if (detectedLanguage === "und") {
+        // If the detected language is undetermined, check if it's Simplified Chinese using a regex
+        const simplifiedChineseRegex = /[\u4E00-\u9FFF]+/;
+        if (simplifiedChineseRegex.test(props.text)) {
+          console.log("Detected Simplified Chinese");
+          detectedLanguage = "zh-CN";
+        } else {
+          // Fallback to English if detection fails
+          detectedLanguage = "en";
+        }
+      } else {
+        detectedLanguage = detectedLanguage;
+      }
+
       const matchingVoice = availableVoices.find((voice) =>
         voice.lang.startsWith(detectedLanguage),
       );
 
       const utterance = new SpeechSynthesisUtterance(props.text);
-
       if (matchingVoice) {
         utterance.voice = matchingVoice;
       } else {
@@ -104,9 +129,11 @@ export function Avatar(props: {
             onClick={speakText}
           >
             <BlackBotIcon />{" "}
-            <div className={styles.speakerContainer}>
-              <SpeakerIcon className={speakerIconClassNames} />
-            </div>
+            {props.text && (
+              <div className={styles.speakerContainer}>
+                <SpeakerIcon className={speakerIconClassNames} />
+              </div>
+            )}
           </div>
         ) : (
           <div
@@ -116,9 +143,11 @@ export function Avatar(props: {
             onClick={speakText}
           >
             <BotIcon />
-            <div className={styles.speakerContainer}>
-              <SpeakerIcon className={speakerIconClassNames} />
-            </div>
+            {props.text && (
+              <div className={styles.speakerContainer}>
+                <SpeakerIcon className={speakerIconClassNames} />
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -130,10 +159,12 @@ export function Avatar(props: {
       className={`user-avatar${props.className ? " " + props.className : ""}`}
       onClick={speakText}
     >
-      <EmojiAvatar avatar={props.avatar!} />
-      <div className={styles.speakerContainer}>
-        <SpeakerIcon className={speakerIconClassNames} />
-      </div>
+      <EmojiAvatar avatar={props.avatar!} />{" "}
+      {props.text && (
+        <div className={styles.speakerContainer}>
+          <SpeakerIcon className={speakerIconClassNames} />
+        </div>
+      )}
     </div>
   );
 }

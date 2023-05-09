@@ -1296,6 +1296,11 @@
   dependencies:
     "@types/ms" "*"
 
+"@types/franc@^5.0.1":
+  "integrity" "sha512-aGfC4aZ5hUEGBgyWIsihtWxwXCwYXc4eAbT7HaorjITpEPCQyPRj9NqNJ3BrdrKCqV5hHmFao6Vuph/HZ6CalA=="
+  "resolved" "https://repo.huaweicloud.com/repository/npm/@types/franc/-/franc-5.0.1.tgz"
+  "version" "5.0.1"
+
 "@types/hast@^2.0.0":
   "integrity" "sha512-wLEm0QvaoawEDoTRwzTXp4b4jpwiJDvR5KMnFnVodm3scufTlBOWRD6N1OBf9TZMhjlNsSfcO5V+7AF4+Vy+9g=="
   "resolved" "https://registry.npmjs.org/@types/hast/-/hast-2.3.4.tgz"
