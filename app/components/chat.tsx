@@ -715,9 +715,13 @@ export function Chat() {
               <div className={styles["chat-message-container"]}>
                 <div className={styles["chat-message-avatar"]}>
                   {message.role === "user" ? (
-                    <Avatar avatar={config.avatar} />
+                    <Avatar
+                      text={message.content}
+                      avatar={config.avatar}
+                      className="user-speaker"
+                    />
                   ) : (
-                    <MaskAvatar mask={session.mask} />
+                    <MaskAvatar mask={session.mask} text={message.content} />
                   )}
                 </div>
                 {showTyping && (

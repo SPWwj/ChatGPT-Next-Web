@@ -27,11 +27,11 @@ import { ModelConfigList } from "./model-config";
 import { FileName, Path } from "../constant";
 import { BUILTIN_MASK_STORE } from "../masks";
 
-export function MaskAvatar(props: { mask: Mask }) {
+export function MaskAvatar(props: { mask: Mask; text?: string }) {
   return props.mask.avatar !== DEFAULT_MASK_AVATAR ? (
-    <Avatar avatar={props.mask.avatar} />
+    <Avatar avatar={props.mask.avatar} text={props.text} />
   ) : (
-    <Avatar model={props.mask.modelConfig.model} />
+    <Avatar model={props.mask.modelConfig.model} text={props.text} />
   );
 }
 

@@ -1811,6 +1811,11 @@
   "resolved" "https://registry.npmjs.org/clsx/-/clsx-1.2.1.tgz"
   "version" "1.2.1"
 
+"collapse-white-space@^2.0.0":
+  "integrity" "sha512-loKTxY1zCOuG4j9f6EPnuyyYkf58RnhhWTvRoZEokgB+WbdXehfjFviyOVYkqzEWz1Q5kRiZdBYS5SwxbQYwzw=="
+  "resolved" "https://repo.huaweicloud.com/repository/npm/collapse-white-space/-/collapse-white-space-2.1.0.tgz"
+  "version" "2.1.0"
+
 "color-convert@^1.9.0":
   "integrity" "sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg=="
   "resolved" "https://registry.npmjs.org/color-convert/-/color-convert-1.9.3.tgz"
@@ -2921,6 +2926,13 @@
   "version" "4.0.10"
   dependencies:
     "fetch-blob" "^3.1.2"
+
+"franc@^6.1.0":
+  "integrity" "sha512-woYqLX7sFcrKD4y1M33IorhH4b21bCDNr0Rm+zlAGRNuxLFilT4h8qEcclu8RFLpHmvNz7FgAYl9Vqfa8UZwoA=="
+  "resolved" "https://repo.huaweicloud.com/repository/npm/franc/-/franc-6.1.0.tgz"
+  "version" "6.1.0"
+  dependencies:
+    "trigram-utils" "^2.0.0"
 
 "fs.realpath@^1.0.0":
   "integrity" "sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw=="
@@ -4270,6 +4282,11 @@
   "resolved" "https://registry.npmjs.org/ms/-/ms-2.1.2.tgz"
   "version" "2.1.2"
 
+"n-gram@^2.0.0":
+  "integrity" "sha512-S24aGsn+HLBxUGVAUFOwGpKs7LBcG4RudKU//eWzt/mQ97/NMKQxDWHyHx63UNWk/OOdihgmzoETn1tf5nQDzQ=="
+  "resolved" "https://repo.huaweicloud.com/repository/npm/n-gram/-/n-gram-2.0.2.tgz"
+  "version" "2.0.2"
+
 "nanoid@^3.3.4":
   "integrity" "sha512-BGcqMMJuToF7i1rt+2PWSNVnWIkGCU78jBG3RxO/bZlnZPK2Cmi2QaffxGO/2RvWi9sL+FAiRiXMgsyxQ1DIDA=="
   "resolved" "https://registry.npmjs.org/nanoid/-/nanoid-3.3.6.tgz"
@@ -5244,6 +5261,14 @@
   "version" "5.0.1"
   dependencies:
     "is-number" "^7.0.0"
+
+"trigram-utils@^2.0.0":
+  "integrity" "sha512-nfWIXHEaB+HdyslAfMxSqWKDdmqY9I32jS7GnqpdWQnLH89r6A5sdk3fDVYqGAZ0CrT8ovAFSAo6HRiWcWNIGQ=="
+  "resolved" "https://repo.huaweicloud.com/repository/npm/trigram-utils/-/trigram-utils-2.0.1.tgz"
+  "version" "2.0.1"
+  dependencies:
+    "collapse-white-space" "^2.0.0"
+    "n-gram" "^2.0.0"
 
 "trim-lines@^3.0.0":
   "integrity" "sha512-kRj8B+YHZCc9kQYdWfJB2/oUl9rA99qbowYYBtr4ui4mZyAQ2JpvVBd/6U2YloATfqBhBTSMhTpgBHtU0Mf3Rg=="

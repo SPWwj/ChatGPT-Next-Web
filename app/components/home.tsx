@@ -23,7 +23,6 @@ import {
 } from "react-router-dom";
 import { SideBar } from "./sidebar";
 import { useAppConfig } from "../store/config";
-import { useMaskStore } from "../store/mask";
 
 export function Loading(props: { noLogo?: boolean }) {
   return (
