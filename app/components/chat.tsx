@@ -250,7 +250,7 @@ export function PromptHints(props: {
       } else if (e.key === "ArrowDown") {
         changeIndex(-1);
       } else if (e.key === "Enter") {
-        // const selectedPrompt = props.prompts.at(selectIndex);
+        const selectedPrompt = props.prompts.at(selectIndex);
         // if (selectedPrompt) {
         //   props.onPromptSelect(selectedPrompt);
         // }
@@ -775,7 +775,6 @@ export function Chat() {
                     parentRef={scrollRef}
                     defaultShow={i >= messages.length - 10}
                   />
-                  <>Item 2</>
                 </div>
                 {!isUser && !message.preview && (
                   <div className={styles["chat-message-actions"]}>
