@@ -97,21 +97,30 @@ export function Avatar(props: {
     return (
       <div className={styles.noDark} onClick={speakText}>
         {props.model?.startsWith("gpt-4") ? (
-          <BlackBotIcon
+          <div
             className={`user-avatar${
               props.className ? " " + props.className : ""
             }`}
-          />
+            onClick={speakText}
+          >
+            <BlackBotIcon />{" "}
+            <div className={styles.speakerContainer}>
+              <SpeakerIcon className={speakerIconClassNames} />
+            </div>
+          </div>
         ) : (
-          <BotIcon
+          <div
             className={`user-avatar${
               props.className ? " " + props.className : ""
             }`}
-          />
+            onClick={speakText}
+          >
+            <BotIcon />
+            <div className={styles.speakerContainer}>
+              <SpeakerIcon className={speakerIconClassNames} />
+            </div>
+          </div>
         )}
-        <div className={styles.speakerContainer}>
-          <SpeakerIcon className={speakerIconClassNames} />
-        </div>
       </div>
     );
   }

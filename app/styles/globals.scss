@@ -338,7 +338,7 @@ pre {
 .user-avatar {
   height: 30px;
   min-height: 30px;
-  width: 40px;
+  width: 70px;
   min-width: 30px;
   display: flex;
   align-items: center;
@@ -349,6 +349,10 @@ pre {
 }
 .user-avatar > * {
   padding: 2.5px;
+  width: 30px;
+}
+.user-avatar > :nth-child(2) {
+  width: 20px;
 }
 
 .one-line {
