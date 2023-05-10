@@ -119,6 +119,7 @@ export const MarkdownContent = React.memo(_MarkDownContent);
 export function Markdown(
   props: {
     content: string;
+    image?: string;
     loading?: boolean;
     fontSize?: number;
     parentRef: RefObject<HTMLDivElement>;
@@ -175,6 +176,11 @@ export function Markdown(
         ) : (
           <MarkdownContent content={props.content} />
         ))}
+      {props.image && (
+        <div>
+          <img src={props.image} />
+        </div>
+      )}
     </div>
   );
 }
