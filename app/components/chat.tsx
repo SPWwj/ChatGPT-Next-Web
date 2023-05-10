@@ -760,6 +760,7 @@ export function Chat() {
                   )}
                   <Markdown
                     content={message.content}
+                    image={message.image}
                     loading={
                       (message.preview || message.content.length === 0) &&
                       !isUser
@@ -773,11 +774,6 @@ export function Chat() {
                     parentRef={scrollRef}
                     defaultShow={i >= messages.length - 10}
                   />
-                  {message.image && (
-                    <div>
-                      <img src={message.image} />
-                    </div>
-                  )}
                 </div>
                 {!isUser && !message.preview && (
                   <div className={styles["chat-message-actions"]}>

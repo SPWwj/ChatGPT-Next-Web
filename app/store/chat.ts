@@ -282,6 +282,9 @@ export const useChatStore = create<ChatStore>()(
           console.log("keyword", keyword);
           if (keyword.length < 1) {
             botMessage.content = "Please enter a keyword after /image";
+            botMessage.streaming = false;
+            botMessage.isError = true;
+            return;
           }
 
           try {
