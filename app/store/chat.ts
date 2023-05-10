@@ -284,39 +284,42 @@ export const useChatStore = create<ChatStore>()(
             botMessage.content = "Please enter a keyword after /image";
             botMessage.streaming = false;
           } else {
-            try {
-              const sanitizedMessage = userMessage.content.replace(
-                /[\n\r]+/g,
-                " ",
-              );
+            async function fetchImageAndUpdateMessage() {
+              try {
+                const sanitizedMessage = userMessage.content.replace(
+                  /[\n\r]+/g,
+                  " ",
+                );
 
-              const requestBody = {
-                prompt: encodeURIComponent(sanitizedMessage), // Replace with the desired prompt
-                N: 1, // Number of images
-                size: "512x512", // Image size
-              };
+                const requestBody = {
+                  prompt: encodeURIComponent(sanitizedMessage),
+                  N: 1,
+                  size: "512x512",
+                };
 
-              const response = fetch(gptImageUrl, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(requestBody),
-              }).then((response) => {
+                const response = await fetch(gptImageUrl, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(requestBody),
+                });
+
                 if (response.ok) {
-                  response.json().then((responseData) => {
-                    botMessage.image = responseData.data[0].url;
-                    botMessage.content = "Here is your image";
-                  });
+                  const responseData = await response.json();
+                  botMessage.image = responseData.data[0].url;
+                  botMessage.content = "Here is your image";
                 } else {
                   botMessage.content = "Error getting image";
                 }
-              });
-            } catch (error) {
-              botMessage.content = "Error getting image";
-            } finally {
-              botMessage.streaming = false;
+              } catch (error) {
+                botMessage.content = "Error getting image";
+              } finally {
+                botMessage.streaming = false;
+                get().onNewMessage(botMessage);
+              }
             }
+            fetchImageAndUpdateMessage();
           }
         } else {
           // make request
