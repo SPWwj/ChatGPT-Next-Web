@@ -1,0 +1,2 @@
+C:\Users\Wwj\Documents\Source\Repos\WhaleJay\Whalejay\Nextjs\ChatGPT-Next-Web\obj\Debug\Whalejay.Next.esproj.SuggestedBindingRedirects.cache
+C:\Users\Wwj\Documents\Source\Repos\WhaleJay\Whalejay\Nextjs\ChatGPT-Next-Web\obj\Debug\Whalejay.Next.esproj.CoreCompileInputs.cache

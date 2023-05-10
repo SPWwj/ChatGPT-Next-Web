@@ -14,6 +14,7 @@ import { showToast } from "../components/ui-lib";
 import { ModelType } from "./config";
 import { createEmptyMask, Mask } from "./mask";
 import { StoreKey } from "../constant";
+import { gptImageUrl } from "../api/common";
 
 export type Message = ChatCompletionResponseMessage & {
   date: string;
@@ -275,11 +276,49 @@ export const useChatStore = create<ChatStore>()(
           session.messages.push(userMessage);
           session.messages.push(botMessage);
         });
-        // botMessage.streaming = false;
-        // botMessage.content = "hello world"
-        // get().onNewMessage(botMessage);
 
-        // return;
+        if (userMessage.content.startsWith("/image")) {
+          const keyword = userMessage.content.substring("/image".length);
+          console.log("keyword", keyword);
+          if (keyword.length < 1) {
+            botMessage.content = "Please enter a keyword after /image";
+          }
+
+          try {
+            const sanitizedMessage = userMessage.content.replace(
+              /[\n\r]+/g,
+              " ",
+            );
+
+            const requestBody = {
+              prompt: encodeURIComponent(sanitizedMessage), // Replace with the desired prompt
+              N: 1, // Number of images
+              size: "512x512", // Image size
+            };
+
+            const response = await fetch(gptImageUrl, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(requestBody),
+            });
+
+            if (response.ok) {
+              const responseData = await response.json();
+              botMessage.image = responseData.data[0].url;
+              botMessage.content = "Here is your image";
+              // console.log(botMessage.image, "botMessage.image");
+            } else {
+              botMessage.content = "Error getting image";
+            }
+          } catch (error) {
+            botMessage.content = "Error getting image";
+          } finally {
+            botMessage.streaming = false;
+          }
+          return;
+        }
 
         // make request
         console.log("[User Input] ", sendMessages);
