@@ -283,88 +283,88 @@ export const useChatStore = create<ChatStore>()(
           if (keyword.length < 1) {
             botMessage.content = "Please enter a keyword after /image";
             botMessage.streaming = false;
-            botMessage.isError = true;
-            return;
-          }
+          } else {
+            try {
+              const sanitizedMessage = userMessage.content.replace(
+                /[\n\r]+/g,
+                " ",
+              );
 
-          try {
-            const sanitizedMessage = userMessage.content.replace(
-              /[\n\r]+/g,
-              " ",
-            );
+              const requestBody = {
+                prompt: encodeURIComponent(sanitizedMessage), // Replace with the desired prompt
+                N: 1, // Number of images
+                size: "512x512", // Image size
+              };
 
-            const requestBody = {
-              prompt: encodeURIComponent(sanitizedMessage), // Replace with the desired prompt
-              N: 1, // Number of images
-              size: "512x512", // Image size
-            };
-
-            const response = await fetch(gptImageUrl, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(requestBody),
-            });
-
-            if (response.ok) {
-              const responseData = await response.json();
-              botMessage.image = responseData.data[0].url;
-              botMessage.content = "Here is your image";
-              // console.log(botMessage.image, "botMessage.image");
-            } else {
+              const response = fetch(gptImageUrl, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(requestBody),
+              }).then((response) => {
+                if (response.ok) {
+                  response.json().then((responseData) => {
+                    botMessage.image = responseData.data[0].url;
+                    botMessage.content = "Here is your image";
+                  });
+                } else {
+                  botMessage.content = "Error getting image";
+                }
+              });
+            } catch (error) {
               botMessage.content = "Error getting image";
-            }
-          } catch (error) {
-            botMessage.content = "Error getting image";
-          } finally {
-            botMessage.streaming = false;
-          }
-          return;
-        }
-
-        // make request
-        console.log("[User Input] ", sendMessages);
-        requestChatStream(sendMessages, {
-          onMessage(content, done) {
-            // stream response
-            if (done) {
+            } finally {
               botMessage.streaming = false;
-              botMessage.content = content;
-              get().onNewMessage(botMessage);
+            }
+          }
+        } else {
+          // make request
+          console.log("[User Input] ", sendMessages);
+          requestChatStream(sendMessages, {
+            onMessage(content, done) {
+              // stream response
+              if (done) {
+                botMessage.streaming = false;
+                botMessage.content = content;
+                get().onNewMessage(botMessage);
+                ControllerPool.remove(
+                  sessionIndex,
+                  botMessage.id ?? messageIndex,
+                );
+              } else {
+                botMessage.content = content;
+                set(() => ({}));
+              }
+            },
+            onError(error, statusCode) {
+              const isAborted = error.message.includes("aborted");
+              if (statusCode === 401) {
+                botMessage.content = Locale.Error.Unauthorized;
+              } else if (!isAborted) {
+                botMessage.content += "\n\n" + Locale.Store.Error;
+              }
+              botMessage.streaming = false;
+              userMessage.isError = !isAborted;
+              botMessage.isError = !isAborted;
+
+              set(() => ({}));
               ControllerPool.remove(
                 sessionIndex,
                 botMessage.id ?? messageIndex,
               );
-            } else {
-              botMessage.content = content;
-              set(() => ({}));
-            }
-          },
-          onError(error, statusCode) {
-            const isAborted = error.message.includes("aborted");
-            if (statusCode === 401) {
-              botMessage.content = Locale.Error.Unauthorized;
-            } else if (!isAborted) {
-              botMessage.content += "\n\n" + Locale.Store.Error;
-            }
-            botMessage.streaming = false;
-            userMessage.isError = !isAborted;
-            botMessage.isError = !isAborted;
-
-            set(() => ({}));
-            ControllerPool.remove(sessionIndex, botMessage.id ?? messageIndex);
-          },
-          onController(controller) {
-            // collect controller for stop/retry
-            ControllerPool.addController(
-              sessionIndex,
-              botMessage.id ?? messageIndex,
-              controller,
-            );
-          },
-          modelConfig: { ...modelConfig },
-        });
+            },
+            onController(controller) {
+              // collect controller for stop/retry
+              ControllerPool.addController(
+                sessionIndex,
+                botMessage.id ?? messageIndex,
+                controller,
+              );
+            },
+            modelConfig: { ...modelConfig },
+          });
+        }
       },
 
       getMemoryPrompt() {

@@ -174,13 +174,15 @@ export function Markdown(
         (props.loading ? (
           <LoadingIcon />
         ) : (
-          <MarkdownContent content={props.content} />
+          <div>
+            <MarkdownContent content={props.content} />
+            {props.image && (
+              <div>
+                <img src={props.image} />
+              </div>
+            )}
+          </div>
         ))}
-      {props.image && (
-        <div>
-          <img src={props.image} />
-        </div>
-      )}
     </div>
   );
 }
