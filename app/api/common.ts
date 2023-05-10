@@ -4,8 +4,8 @@ const OPENAI_URL = "api.openai.com";
 const DEFAULT_PROTOCOL = "https";
 const PROTOCOL = process.env.PROTOCOL ?? DEFAULT_PROTOCOL;
 const BASE_URL = process.env.BASE_URL ?? OPENAI_URL;
-export const baseUrl = "https://localhost:7276";
-// export const baseUrl = "https://bitflow.azurewebsites.net";
+// export const baseUrl = "https://localhost:7276";
+export const baseUrl = "https://whalejaywei.azurewebsites.net";
 
 export const gptImageUrl = `${baseUrl}/api/chatgpt/image`;
 export async function requestOpenai(req: NextRequest) {
