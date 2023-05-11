@@ -56,7 +56,7 @@ const makeImageRequestParam = (
 ): CreateImageRequest => {
   // Set default values
   const defaultOptions: Omit<CreateImageRequest, "prompt"> = {
-    n: 1,
+    n: 4,
     size: CreateImageRequestSizeEnum._512x512,
     response_format: CreateImageRequestResponseFormatEnum.Url,
     user: "default_user",
@@ -293,7 +293,7 @@ export async function requestImage(
         clearTimeout(reqTimeoutId);
 
         const finish = (images: ImagesResponseDataInner[]) => {
-          options?.onMessage("Here is your image", images, null, true);
+          options?.onMessage("Here is your images", images, null, true);
           controller.abort();
         };
 
