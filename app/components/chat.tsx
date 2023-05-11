@@ -760,7 +760,7 @@ export function Chat() {
                   )}
                   <Markdown
                     content={message.content}
-                    image={message.image}
+                    images={message.images}
                     image_alt={message.image_alt}
                     loading={
                       (message.preview || message.content.length === 0) &&

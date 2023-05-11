@@ -16,6 +16,8 @@ import React from "react";
 import ImagePlaceHolder from "../icons/image-placeholder.svg";
 import ImageError from "../icons/image-error.svg";
 import { IMAGE_PLACEHOLDER } from "../constant";
+import { ImagesResponseDataInner } from "openai";
+import ImageList from "./ImageList";
 
 export function Mermaid(props: { code: string; onError: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -124,7 +126,7 @@ export const MarkdownContent = React.memo(_MarkDownContent);
 export function Markdown(
   props: {
     content: string;
-    image?: string;
+    images?: ImagesResponseDataInner[];
     image_alt?: string;
     loading?: boolean;
     fontSize?: number;
@@ -192,7 +194,7 @@ export function Markdown(
           <div>
             <MarkdownContent content={props.content} />
             <div className={styles.content_image}>
-              {props.image && <img src={props.image} />}
+              {props.images && <ImageList images={props.images} />}
               {props.image_alt && <ImageError width="100px" height="100px" />}
             </div>
           </div>

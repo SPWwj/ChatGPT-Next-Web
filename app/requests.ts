@@ -9,7 +9,13 @@ import {
 } from "./store";
 import { showToast } from "./components/ui-lib";
 import { ACCESS_CODE_PREFIX, IMAGE_ERROR, IMAGE_PLACEHOLDER } from "./constant";
-import { gptImageUrl } from "./api/common";
+import {
+  CreateImageRequest,
+  CreateImageRequestResponseFormatEnum,
+  CreateImageRequestSizeEnum,
+  ImagesResponse,
+  ImagesResponseDataInner,
+} from "openai";
 
 const TIME_OUT_MS = 60000;
 
@@ -42,6 +48,29 @@ const makeRequestParam = (
     temperature: modelConfig.temperature,
     presence_penalty: modelConfig.presence_penalty,
   };
+};
+
+const makeImageRequestParam = (
+  prompt: string,
+  options?: Omit<CreateImageRequest, "prompt">,
+): CreateImageRequest => {
+  // Set default values
+  const defaultOptions: Omit<CreateImageRequest, "prompt"> = {
+    n: 1,
+    size: CreateImageRequestSizeEnum._512x512,
+    response_format: CreateImageRequestResponseFormatEnum.Url,
+    user: "default_user",
+  };
+
+  // Override default values with provided options
+  const finalOptions = { ...defaultOptions, ...options };
+
+  const request: CreateImageRequest = {
+    prompt,
+    ...finalOptions,
+  };
+
+  return request;
 };
 
 function getHeaders() {
@@ -232,7 +261,7 @@ export async function requestImage(
   options?: {
     onMessage: (
       message: string | null,
-      image: string | null,
+      image: ImagesResponseDataInner[] | null,
       image_alt: string | null,
       done: boolean,
     ) => void;
@@ -257,31 +286,20 @@ export async function requestImage(
         options?.onMessage(null, null, IMAGE_PLACEHOLDER, false);
 
         const sanitizedMessage = keyword.replace(/[\n\r]+/g, " ");
+        const req = makeImageRequestParam(sanitizedMessage);
 
-        const requestBody = {
-          prompt: encodeURIComponent(sanitizedMessage),
-          N: 1,
-          size: "512x512",
-        };
+        const res = await requestOpenaiClient("v1/images/generations")(req);
 
-        const res = await fetch(gptImageUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestBody),
-          signal: controller.signal,
-        });
         clearTimeout(reqTimeoutId);
 
-        const finish = (image: string) => {
-          options?.onMessage("Here is your image", image, null, true);
+        const finish = (images: ImagesResponseDataInner[]) => {
+          options?.onMessage("Here is your image", images, null, true);
           controller.abort();
         };
 
         if (res.ok) {
-          const responseData = await res.json();
-          finish(responseData.data[0].url);
+          const responseData = (await res.json()) as ImagesResponse;
+          finish(responseData.data);
         } else if (res.status === 401) {
           console.error("Unauthorized");
           options?.onError(new Error("Unauthorized"), res.status);

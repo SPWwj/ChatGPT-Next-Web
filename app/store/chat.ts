@@ -1,7 +1,10 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-import { type ChatCompletionResponseMessage } from "openai";
+import {
+  ImagesResponseDataInner,
+  type ChatCompletionResponseMessage,
+} from "openai";
 import {
   ControllerPool,
   requestChatStream,
@@ -15,13 +18,12 @@ import { showToast } from "../components/ui-lib";
 import { ModelType } from "./config";
 import { createEmptyMask, Mask } from "./mask";
 import { StoreKey } from "../constant";
-import { gptImageUrl } from "../api/common";
 
 export type Message = ChatCompletionResponseMessage & {
   date: string;
   streaming?: boolean;
   isError?: boolean;
-  image?: string;
+  images?: ImagesResponseDataInner[];
   image_alt?: string;
   id?: number;
   model?: ModelType;
@@ -283,12 +285,12 @@ export const useChatStore = create<ChatStore>()(
           const keyword = userMessage.content.substring("/image".length);
           console.log("keyword", keyword);
           requestImage(keyword, {
-            onMessage(content, image, image_alt, done) {
+            onMessage(content, images, image_alt, done) {
               // stream response
               if (done) {
                 botMessage.streaming = false;
                 botMessage.content = content!;
-                botMessage.image = image!;
+                botMessage.images = images!;
                 botMessage.image_alt = image_alt!;
                 get().onNewMessage(botMessage);
                 ControllerPool.remove(
