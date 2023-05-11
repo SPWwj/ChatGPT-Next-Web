@@ -5,6 +5,7 @@ import { type ChatCompletionResponseMessage } from "openai";
 import {
   ControllerPool,
   requestChatStream,
+  requestImage,
   requestWithPrompt,
 } from "../requests";
 import { trimTopic } from "../utils";
@@ -21,6 +22,7 @@ export type Message = ChatCompletionResponseMessage & {
   streaming?: boolean;
   isError?: boolean;
   image?: string;
+  image_alt?: string;
   id?: number;
   model?: ModelType;
 };
@@ -280,47 +282,50 @@ export const useChatStore = create<ChatStore>()(
         if (userMessage.content.startsWith("/image")) {
           const keyword = userMessage.content.substring("/image".length);
           console.log("keyword", keyword);
-          if (keyword.length < 1) {
-            botMessage.content = "Please enter a keyword after /image";
-            botMessage.streaming = false;
-          } else {
-            async function fetchImageAndUpdateMessage() {
-              try {
-                const sanitizedMessage = userMessage.content.replace(
-                  /[\n\r]+/g,
-                  " ",
-                );
-
-                const requestBody = {
-                  prompt: encodeURIComponent(sanitizedMessage),
-                  N: 1,
-                  size: "512x512",
-                };
-
-                const response = await fetch(gptImageUrl, {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(requestBody),
-                });
-
-                if (response.ok) {
-                  const responseData = await response.json();
-                  botMessage.image = responseData.data[0].url;
-                  botMessage.content = "Here is your image";
-                } else {
-                  botMessage.content = "Error getting image";
-                }
-              } catch (error) {
-                botMessage.content = "Error getting image";
-              } finally {
+          requestImage(keyword, {
+            onMessage(content, image, image_alt, done) {
+              // stream response
+              if (done) {
                 botMessage.streaming = false;
+                botMessage.content = content!;
+                botMessage.image = image!;
+                botMessage.image_alt = image_alt!;
                 get().onNewMessage(botMessage);
+                ControllerPool.remove(
+                  sessionIndex,
+                  botMessage.id ?? messageIndex,
+                );
+              } else {
+                botMessage.image_alt = image_alt!;
+                set(() => ({}));
               }
-            }
-            fetchImageAndUpdateMessage();
-          }
+            },
+            onError(error, statusCode) {
+              const isAborted = error.message.includes("aborted");
+              if (statusCode === 401) {
+                botMessage.content = Locale.Error.Unauthorized;
+              } else if (!isAborted) {
+                botMessage.content += "\n\n" + Locale.Store.Error;
+              }
+              botMessage.streaming = false;
+              userMessage.isError = !isAborted;
+              botMessage.isError = !isAborted;
+
+              set(() => ({}));
+              ControllerPool.remove(
+                sessionIndex,
+                botMessage.id ?? messageIndex,
+              );
+            },
+            onController(controller) {
+              // collect controller for stop/retry
+              ControllerPool.addController(
+                sessionIndex,
+                botMessage.id ?? messageIndex,
+                controller,
+              );
+            },
+          });
         } else {
           // make request
           console.log("[User Input] ", sendMessages);

@@ -8,7 +8,8 @@ import {
   useChatStore,
 } from "./store";
 import { showToast } from "./components/ui-lib";
-import { ACCESS_CODE_PREFIX } from "./constant";
+import { ACCESS_CODE_PREFIX, IMAGE_ERROR, IMAGE_PLACEHOLDER } from "./constant";
+import { gptImageUrl } from "./api/common";
 
 const TIME_OUT_MS = 60000;
 
@@ -223,6 +224,83 @@ export async function requestChatStream(
   } catch (err) {
     console.error("NetWork Error", err);
     options?.onError(err as Error);
+  }
+}
+
+export async function requestImage(
+  keyword: string,
+  options?: {
+    onMessage: (
+      message: string | null,
+      image: string | null,
+      image_alt: string | null,
+      done: boolean,
+    ) => void;
+    onError: (error: Error, statusCode?: number) => void;
+    onController?: (controller: AbortController) => void;
+  },
+) {
+  if (keyword.length < 1) {
+    options?.onMessage(
+      "Please enter a keyword after `/image`",
+      null,
+      null,
+      true,
+    );
+  } else {
+    const controller = new AbortController();
+    const reqTimeoutId = setTimeout(() => controller.abort(), TIME_OUT_MS);
+    options?.onController?.(controller);
+
+    async function fetchImageAndUpdateMessage() {
+      try {
+        options?.onMessage(null, null, IMAGE_PLACEHOLDER, false);
+
+        const sanitizedMessage = keyword.replace(/[\n\r]+/g, " ");
+
+        const requestBody = {
+          prompt: encodeURIComponent(sanitizedMessage),
+          N: 1,
+          size: "512x512",
+        };
+
+        const res = await fetch(gptImageUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+          signal: controller.signal,
+        });
+        clearTimeout(reqTimeoutId);
+
+        const finish = (image: string) => {
+          options?.onMessage("Here is your image", image, null, true);
+          controller.abort();
+        };
+
+        if (res.ok) {
+          const responseData = await res.json();
+          finish(responseData.data[0].url);
+        } else if (res.status === 401) {
+          console.error("Unauthorized");
+          options?.onError(new Error("Unauthorized"), res.status);
+        } else {
+          console.error("Stream Error", res.body);
+          options?.onError(new Error("Stream Error"), res.status);
+        }
+      } catch (err) {
+        console.error("NetWork Error", err);
+        options?.onError(err as Error);
+        options?.onMessage(
+          "Image generation has been cancelled.",
+          null,
+          IMAGE_ERROR,
+          true,
+        );
+      }
+    }
+    fetchImageAndUpdateMessage();
   }
 }
 
