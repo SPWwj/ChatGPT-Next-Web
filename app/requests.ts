@@ -73,7 +73,7 @@ const makeImageRequestParam = (
   return request;
 };
 
-function getHeaders() {
+export function getHeaders() {
   const accessStore = useAccessStore.getState();
   let headers: Record<string, string> = {};
 
@@ -94,7 +94,6 @@ function getHeaders() {
 
   return headers;
 }
-
 export function requestOpenaiClient(path: string) {
   const openaiUrl = useAccessStore.getState().openaiUrl;
   return (body: any, method = "POST") =>
