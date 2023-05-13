@@ -1,3 +1,4 @@
+import { COMMAND_IMAGE } from "../constant";
 import { SubmitKey } from "../store/config";
 import type { LocaleType } from "./index";
 
@@ -157,6 +158,13 @@ const it: LocaleType = {
       Placeholder: "Inserisci il codice d'accesso",
     },
     Model: "Modello GPT",
+    ImageModel: {
+      Title: "Modello di immagine",
+      Model: "Modello DALL-E",
+      Command: "Comando di generazione immagine",
+      CountLimit: "Limite di generazione immagine",
+      Size: "Dimensione di generazione immagine",
+    },
     Temperature: {
       Title: "Temperature",
       SubTitle: "Un valore maggiore rende l'output più casuale",
@@ -174,6 +182,10 @@ const it: LocaleType = {
   Store: {
     DefaultTopic: "Nuova conversazione",
     BotHello: "Ciao, come posso aiutarti oggi?",
+    BotHelloWithCommand: (command: string) =>
+      "Ciao, come posso aiutarti oggi?\n Per generare immagini, usa `" +
+      command +
+      " {parola chiave}.`",
     Error: "Qualcosa è andato storto, riprova più tardi.",
     Prompt: {
       History: (content: string) =>

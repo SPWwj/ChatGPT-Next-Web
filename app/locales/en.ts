@@ -1,3 +1,4 @@
+import { COMMAND_IMAGE } from "../constant";
 import { SubmitKey } from "../store/config";
 import type { LocaleType } from "./index";
 
@@ -156,6 +157,13 @@ const en: LocaleType = {
       Placeholder: "Need Access Code",
     },
     Model: "Model",
+    ImageModel: {
+      Title: "Image Model",
+      Model: "DALL-E Model",
+      Command: "Generate Image Command",
+      CountLimit: "Image Generation Limit",
+      Size: "Image Generation Size",
+    },
     Temperature: {
       Title: "Temperature",
       SubTitle: "A larger value makes the more random output",
@@ -172,8 +180,11 @@ const en: LocaleType = {
   },
   Store: {
     DefaultTopic: "New Conversation",
-    BotHello:
-      "Hello! How can I assist you today?\n To generate images, use `/Image {keyword}.`",
+    BotHello: "Hello! How can I assist you today?",
+    BotHelloWithCommand: (command: string) =>
+      "Hello! How can I assist you today?\n To generate images, use `" +
+      command +
+      " {keyword}.`",
     Error: "Something went wrong, please try again later.",
     Prompt: {
       History: (content: string) =>

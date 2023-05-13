@@ -1,6 +1,8 @@
+import { ImageRequestSizeEnum } from "../api/openai/typing";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { StoreKey } from "../constant";
+import { COMMAND_IMAGE, StoreKey } from "../constant";
+import { CreateImageRequestSizeEnum } from "openai";
 
 export enum SubmitKey {
   Enter = "Enter",
@@ -29,6 +31,12 @@ export const DEFAULT_CONFIG = {
 
   dontShowMaskSplashScreen: false, // dont show splash screen when create chat
 
+  imageModelConfig: {
+    imageLimit: 1,
+    command: COMMAND_IMAGE,
+    size: "256x256" as ImageRequestSizeEnum,
+  },
+
   modelConfig: {
     model: "gpt-3.5-turbo" as ModelType,
     temperature: 0.5,
@@ -48,6 +56,7 @@ export type ChatConfigStore = ChatConfig & {
 };
 
 export type ModelConfig = ChatConfig["modelConfig"];
+export type ImageModelConfig = ChatConfig["imageModelConfig"];
 
 const ENABLE_GPT4 = true;
 
@@ -131,6 +140,19 @@ export const ModalConfigValidator = {
   },
   temperature(x: number) {
     return limitNumber(x, 0, 1, 1);
+  },
+};
+export const ImageModalConfigValidator = {
+  size: (value: string): ImageRequestSizeEnum => {
+    const validSizes = Object.values(
+      CreateImageRequestSizeEnum,
+    ) as unknown as ImageRequestSizeEnum[];
+    if (validSizes.includes(value as ImageRequestSizeEnum)) {
+      return value as ImageRequestSizeEnum;
+    } else {
+      console.warn(`Invalid size: ${value}. Defaulting to "256x256".`);
+      return "256x256";
+    }
   },
 };
 

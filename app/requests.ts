@@ -56,7 +56,7 @@ const makeImageRequestParam = (
 ): CreateImageRequest => {
   // Set default values
   const defaultOptions: Omit<CreateImageRequest, "prompt"> = {
-    n: 4,
+    n: useAppConfig.getState().imageModelConfig.imageLimit,
     size: CreateImageRequestSizeEnum._512x512,
     response_format: CreateImageRequestResponseFormatEnum.Url,
     user: "default_user",
