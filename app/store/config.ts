@@ -32,7 +32,7 @@ export const DEFAULT_CONFIG = {
   dontShowMaskSplashScreen: false, // dont show splash screen when create chat
 
   imageModelConfig: {
-    imageLimit: 1,
+    noOfImage: 1,
     command: COMMAND_IMAGE,
     size: "256x256" as ImageRequestSizeEnum,
   },

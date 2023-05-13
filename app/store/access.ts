@@ -2,7 +2,6 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { StoreKey } from "../constant";
 import { getHeaders } from "../requests";
-import { BOT_HELLO } from "./chat";
 import { ALL_MODELS } from "./config";
 
 export interface AccessControlStore {

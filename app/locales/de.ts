@@ -1,4 +1,3 @@
-import { COMMAND_IMAGE } from "../constant";
 import { SubmitKey } from "../store/config";
 import type { LocaleType } from "./index";
 
@@ -163,7 +162,7 @@ const de: LocaleType = {
       Title: "Bildmodell",
       Model: "DALL-E Modell",
       Command: "Bildgenerierungsbefehl",
-      CountLimit: "Bildgenerierungslimit",
+      NoOfImage: "Bildgenerierungslimit",
       Size: "Bildgenerierungsgröße",
     },
     Temperature: {

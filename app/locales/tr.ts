@@ -1,4 +1,3 @@
-import { COMMAND_IMAGE } from "../constant";
 import { SubmitKey } from "../store/config";
 import type { LocaleType } from "./index";
 
@@ -161,7 +160,7 @@ const tr: LocaleType = {
       Title: "Resim Modeli",
       Model: "DALL-E Modeli",
       Command: "Resim Oluşturma Komutu",
-      CountLimit: "Resim Oluşturma Limiti",
+      NoOfImage: "Resim Oluşturma Limiti",
       Size: "Resim Oluşturma Boyutu",
     },
     Temperature: {

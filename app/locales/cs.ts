@@ -1,4 +1,3 @@
-import { COMMAND_IMAGE } from "../constant";
 import { SubmitKey } from "../store/config";
 import type { LocaleType } from "./index";
 
@@ -161,7 +160,7 @@ const cs: LocaleType = {
       Title: "Obrázkový model",
       Model: "Model DALL-E",
       Command: "Příkaz pro generování obrázků",
-      CountLimit: "Limit počtu generovaných obrázků",
+      NoOfImage: "Limit počtu generovaných obrázků",
       Size: "Velikost generovaného obrázku",
     },
     Temperature: {
