@@ -232,8 +232,6 @@ bash <(curl -s https://raw.githubusercontent.com/Yidadaa/ChatGPT-Next-Web/main/s
 
 ![More](./docs/images/more.png)
 
-### Contributor
-
 [Contributors](https://github.com/Yidadaa/ChatGPT-Next-Web/graphs/contributors)
 
 ## LICENSE
